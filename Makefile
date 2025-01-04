@@ -14,3 +14,4 @@ check-migrations:
 
 test:
 	poetry run pytest --numprocesses logical --dist worksteal
+	poetry run coverage-threshold
