@@ -1,7 +1,8 @@
-from src.core.asgi import app
+from src.core.asgi import get_app
 
 __all__ = ("app",)
 
+app = get_app()
 
 if __name__ == "__main__":
     import uvicorn

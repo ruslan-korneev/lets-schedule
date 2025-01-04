@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Ruslan <admin@ruslan.beer>"]
 readme = "README.md"
+packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -16,6 +17,8 @@ pydantic = {extras = ["email"], version = "^2.10.4"}
 pydantic-settings = "^2.7.1"
 sentry-sdk = {extras = ["loguru"], version = "^2.19.2"}
 loguru = "^0.7.3"
+httpx = "^0.28.1"
+greenlet = "^3.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -24,11 +27,15 @@ ruff = "^0.8.5"
 isort = "^5.13.2"
 mypy = "^1.14.1"
 black = "^24.10.0"
-pytest = "^8.3.4"
 pytest-cov = "^6.0.0"
-pytest-asyncio = "^0.25.1"
 pytest-xdist = "^3.6.1"
 pytest-freezegun = "^0.4.2"
+pytest-mock = "^3.14.0"
+pytest = "<8"
+pytest-asyncio = "0.21.1"
+pytest-env = "1.1.3"
+setuptools = "^75.6.0"
+asyncpg-stubs = "^0.30.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -98,7 +105,7 @@ lint.ignore = [
 
 fix = true
 line-length = 120
-target-version = "py313"
+target-version = "py312"
 extend-exclude = [".venv", "venv", "migrations"]
 
 [tool.ruff.lint.flake8-bugbear]
@@ -111,7 +118,7 @@ extend-immutable-calls = [
 
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.12"
 plugins = ["sqlalchemy.ext.mypy.plugin"]
 exclude = ["migrations"]
 warn_unused_configs = true

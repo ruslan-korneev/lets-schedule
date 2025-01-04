@@ -19,6 +19,7 @@ class DbSettings(BaseModel):
     def get_url(
         self,
         scheme: Literal["postgres", "postgresql", "postgresql+asyncpg"] = "postgresql+asyncpg",
+        db_name: str | None = None,
     ) -> SecretStr:
         dsn = PostgresDsn.build(
             scheme=scheme,
@@ -26,7 +27,7 @@ class DbSettings(BaseModel):
             port=self.port,
             username=self.username,
             password=self.password.get_secret_value(),
-            path=self.name,
+            path=db_name or self.name,
         )
         return SecretStr(str(dsn))
 
