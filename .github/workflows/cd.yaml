@@ -28,3 +28,23 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: SSH to Server and Deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+            docker stop ${{ secrets.DOCKER_IMAGE }} || true
+            docker rm ${{ secrets.DOCKER_IMAGE }} || true
+            docker run -d --name ${{ secrets.DOCKER_IMAGE }} \
+                --network host --env-file ${{ secrets.SERVER_ENV_FILE_PATH }}\
+                ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest \
+                uvicorn main:app --host 0.0.0.0 --port ${{ secrets.APP_PORT }} --workers ${{ secrets.WORKERS }}
