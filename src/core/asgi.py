@@ -26,7 +26,6 @@ def get_app() -> FastAPI:
     app = FastAPI(
         title=settings.project_title,
         description=settings.project_description,
-        root_path="/api",
     )
     app.add_middleware(
         CORSMiddleware,
