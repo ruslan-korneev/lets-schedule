@@ -38,6 +38,7 @@ setuptools = "^75.6.0"
 asyncpg-stubs = "^0.30.0"
 coverage-threshold = "^0.5.0"
 coverage = "^7.6.10"
+dotenv-linter = "^0.5.0"
 
 [build-system]
 requires = ["poetry-core"]

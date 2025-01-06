@@ -8,6 +8,7 @@ lint:
 	poetry run ruff check .
 	poetry run mypy .
 	poetry run poetry check
+	poetry run dotenv-linter .env.example
 
 check-migrations:
 	poetry run alembic check
