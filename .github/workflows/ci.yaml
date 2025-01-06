@@ -19,7 +19,7 @@ jobs:
         if: steps.cp312.outputs.cache-hit != 'true'
 
   linter:
-    name: Linter Ruff
+    name: Linter
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -32,39 +32,11 @@ jobs:
           python-version: "3.12.7"
           cache: "poetry"
 
-      - run: poetry run ruff check .
-
-  mypy:
-    name: Mypy Type Checking
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v5
-        id: cp312
-        with:
-          python-version: "3.12.7"
-          cache: "poetry"
-
-      - run: poetry run mypy .
-
-  isort:
-    name: Imports Sorting
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v5
-        id: cp312
-        with:
-          python-version: "3.12.7"
-          cache: "poetry"
-
-      - run: poetry run isort .
+      - run: |
+          poetry run ruff check .
+          poetry run mypy .
+          poetry run isort .
+          poetry run dotenv-linter .env.example
 
   check-migrations:
     name: Check Migrations
@@ -98,8 +70,8 @@ jobs:
           poetry run alembic upgrade head
           poetry run alembic check
 
-  pytest:
-    name: Pytest
+  test:
+    name: Tests
     needs: build
     runs-on: ubuntu-latest
     services:
