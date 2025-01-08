@@ -1,6 +1,6 @@
 FROM python:3.12.7-slim-bullseye
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.5.14-python3.12-bookworm-slim /uv /uvx /bin/
 COPY . /app
 
 WORKDIR /app
