@@ -8,7 +8,7 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.115.6"
+fastapi = {extras = ["all"], version = "^0.115.6"}
 uvicorn = "^0.34.0"
 sqlalchemy = "^2.0.36"
 alembic = "^1.14.0"
@@ -19,6 +19,7 @@ sentry-sdk = {extras = ["loguru"], version = "^2.19.2"}
 loguru = "^0.7.3"
 httpx = "^0.28.1"
 greenlet = "^3.1.1"
+python-jose = "^3.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -39,6 +40,8 @@ asyncpg-stubs = "^0.30.0"
 coverage-threshold = "^0.5.0"
 coverage = "^7.6.10"
 dotenv-linter = "^0.5.0"
+vulture = "^2.14"
+types-python-jose = "^3.3.4.20240106"
 
 [build-system]
 requires = ["poetry-core"]
@@ -144,7 +147,7 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 python_files = "tests_*.py test_*.py"
 asyncio_mode = "auto"
-addopts = "--cov-report json --cov-branch  --cov=src --no-cov-on-fail  --capture tee-sys"
+addopts = "--cov-report json --cov-report term-missing:skip-covered --cov-branch  --cov=src --no-cov-on-fail  --capture tee-sys"
 filterwarnings = [
     "ignore::DeprecationWarning:pytest_freezegun.*:",
 ]
@@ -156,3 +159,12 @@ omit = ["**/tests/*", "src/core/*"]
 [coverage-threshold]
 line_coverage_min = 80
 branch_coverage_min = 70
+
+[tool.vulture]
+exclude = [".venv/", "venv/", "src/db/"]
+ignore_decorators = ["@router.*", "@app.*", "@pytest.fixture*", "@pytest_asyncio.fixture*", "@field_validator*"]
+ignore_names = ["model_config"]
+make_whitelist = true
+min_confidence = 60
+paths = ["main.py", "src"]
+sort_by_size = true

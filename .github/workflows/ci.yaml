@@ -35,8 +35,9 @@ jobs:
       - run: |
           poetry run ruff check .
           poetry run mypy .
-          poetry run isort .
+          poetry run poetry check
           poetry run dotenv-linter .env.example
+          poetry run vulture
 
   check-migrations:
     name: Check Migrations

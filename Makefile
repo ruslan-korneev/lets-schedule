@@ -9,6 +9,7 @@ lint:
 	poetry run mypy .
 	poetry run poetry check
 	poetry run dotenv-linter .env.example
+	poetry run vulture
 
 check-migrations:
 	poetry run alembic check

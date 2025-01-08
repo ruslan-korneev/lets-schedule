@@ -1,9 +1,11 @@
 import sys
+from datetime import timedelta
 from pathlib import Path
 from typing import Literal
 
 from loguru import logger
 from pydantic import BaseModel, PostgresDsn, SecretStr
+from pydantic_core import Url
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 __all__ = ("settings",)
@@ -32,14 +34,28 @@ class DbSettings(BaseModel):
         return SecretStr(str(dsn))
 
 
+class GoogleSettings(BaseModel):
+    client_id: str = "111111111111-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.apps.googleusercontent.com"
+    client_secret: str = "AAAAAA-zzzzzzzzz-zzzzzzzzzzzzzzzzzz"
+
+
+class JWTSettings(BaseModel):
+    secret_key: str = "secret-key"
+    algorithm: Literal["HS256", "HS512"] = "HS256"
+    access_token_lifetime: timedelta = timedelta(minutes=30)
+
+
 class Config(BaseSettings):
     root_dir: Path = Path(__file__).parent.parent.parent.resolve()
     logging_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
+    jwt: JWTSettings = JWTSettings()
+    google: GoogleSettings = GoogleSettings()
     db: DbSettings = DbSettings()
 
     project_title: str = "Let's Schedule"
     project_description: str = "Let's Schedule is an open-source API designed for scheduling events"
+    app_host: Url = Url("http://localhost:8000")
 
     sentry_dsn: SecretStr = SecretStr("")
 
@@ -48,7 +64,7 @@ class Config(BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=False,
         validate_assignment=True,
-        env_nested_delimiter="_",
+        env_nested_delimiter="__",
         extra="ignore",  # ignores extra keys from env file
     )
 

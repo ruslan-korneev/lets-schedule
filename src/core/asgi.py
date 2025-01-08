@@ -24,6 +24,7 @@ def get_app() -> FastAPI:
         )
 
     app = FastAPI(
+        debug=settings.logging_level == "DEBUG",
         title=settings.project_title,
         description=settings.project_description,
     )
