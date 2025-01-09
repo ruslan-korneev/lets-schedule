@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Literal
 
 from loguru import logger
-from pydantic import BaseModel, PostgresDsn, SecretStr
+from pydantic import BaseModel, Field, PostgresDsn, SecretStr
 from pydantic_core import Url
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -35,8 +35,14 @@ class DbSettings(BaseModel):
 
 
 class GoogleSettings(BaseModel):
-    client_id: str = "111111111111-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.apps.googleusercontent.com"
-    client_secret: str = "AAAAAA-zzzzzzzzz-zzzzzzzzzzzzzzzzzz"
+    client_id: str = Field(
+        default="111111111111-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.apps.googleusercontent.com",
+        pattern="^[0-9]+-[0-9A-Za-z_]{32}\\.apps\\.googleusercontent\\.com$",
+    )
+    client_secret: str = Field(
+        default="AAAAAA-zzzzzzzzz-zzzzzzzzzzzzzzzzzz",
+        pattern="^[A-Za-z0-9\\-]{35}$",
+    )
 
 
 class JWTSettings(BaseModel):
